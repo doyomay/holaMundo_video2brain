@@ -1,8 +1,11 @@
 package gerardomay.com.holamundo_video2brain;
 
+import android.content.ContentResolver;
 import android.content.Intent;
-import android.support.v7.app.ActionBarActivity;
+import android.database.Cursor;
 import android.os.Bundle;
+import android.provider.Contacts;
+import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -18,7 +21,10 @@ public class MyActivity extends ActionBarActivity {
         Intent i = new Intent(this, SegundaActividad.class);
         i.putExtra("ValorTest","True"); // se crea una variable con el texto o lo que sea que se le pasara
 
-        startActivity(i);
+        //startActivity(i);
+
+        access();
+
     }
 
     @Override
@@ -64,5 +70,21 @@ public class MyActivity extends ActionBarActivity {
             return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    public void access() {
+        ContentResolver cr = getContentResolver();
+        Cursor cur = cr.query(Contacts.People.CONTENT_URI, null, null, null, null);
+
+        if (cur.getCount() > 0 ) {
+            while (cur.moveToNext() ) {
+                String id = cur.getString(cur.getColumnIndex(Contacts.People._ID));
+                String name = cur.getString(cur.getColumnIndex(Contacts.People.DISPLAY_NAME));
+
+                Log.d("Nombre: ", name);
+                Log.d("ID: ", id);
+            }
+        }
+
     }
 }
